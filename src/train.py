@@ -25,13 +25,13 @@ from model   import DrugInteractionGNN
 
 # ── Config ─────────────────────────────────────────────────────────────────
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CSV_PATH    = os.path.join(BASE_DIR, "data", "raw", "synthetic_interactions.csv")
+CSV_PATH    = os.path.join(BASE_DIR, "data", "processed", "real_interactions.csv")
 MODEL_DIR   = os.path.join(BASE_DIR, "models")
 MODEL_PATH  = os.path.join(MODEL_DIR, "best_model.pt")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 # Training hyperparameters
-EPOCHS      = 100
+EPOCHS      = 200
 LR          = 0.001       # learning rate
 HIDDEN_DIM  = 128
 NUM_CLASSES = 4
