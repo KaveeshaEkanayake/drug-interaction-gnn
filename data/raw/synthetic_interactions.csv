@@ -1,0 +1,16 @@
+drug1_name,drug2_name,smiles1,smiles2,interaction_type,severity
+Warfarin,Aspirin,CC(=O)Cc1ccc(OC)c(c1)C(=O)O,CC(=O)Oc1ccccc1C(=O)O,bleeding_risk,dangerous
+Metformin,Ibuprofen,CN(C)C(=N)NC(=N)N,CC(C)Cc1ccc(cc1)C(C)C(=O)O,renal_impairment,moderate
+Lisinopril,Potassium,OC(=O)C1CCN(CC1)C(=O)C(N)CCc1ccccc1,[K+],hyperkalemia,dangerous
+Atorvastatin,Clarithromycin,CC(C)c1c(C(=O)Nc2ccccc2)c(c(c(n1)c3ccc(F)cc3)O)CC,CC1OC(=O)c2cc(C)ccc2O1,myopathy_risk,moderate
+Omeprazole,Clopidogrel,COc1ccc2nc(S(=O)Cc3ncc(C)c(OC)c3C)[nH]c2c1,OC(=O)c1ccccc1Cl,reduced_efficacy,mild
+Amoxicillin,Methotrexate,CC1(C)SC2C(NC(=O)Cc3ccc(N)cc3)C(=O)N2C1C(=O)O,CN(Cc1cnc2nc(N)nc(N)c2n1)c1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O,methotrexate_toxicity,dangerous
+Simvastatin,Amlodipine,CCC(C)(C)OC(=O)C1CC(O)(C(=O)OC)C(C)(C)O1,CCOC(=O)c1c(COCCN)nc(C)c(c1)C(=O)OC,increased_exposure,moderate
+Digoxin,Amiodarone,OC1CC2CC(C1)C3C2CC4(O)CCC(OC5OC(CO)C(O)C(O)C5O)C4C3=O,CCCC(=O)Oc1ccc(cc1)c2cc3ccccc3o2,bradycardia,dangerous
+Paracetamol,Ibuprofen,CC(=O)Nc1ccc(O)cc1,CC(C)Cc1ccc(cc1)C(C)C(=O)O,renal_stress,mild
+Fluoxetine,Tramadol,CNCCC(Oc1ccc(cc1)C(F)(F)F)c1ccccc1,OC1(CC2CC1CC2N(C)C)c1ccccc1,serotonin_syndrome,dangerous
+Ciprofloxacin,Antacid,OC(=O)c1cn(C2CC2)c2cc(N3CCNCC3)c(F)cc2c1=O,OC(=O)c1cn(C2CC2)c2cc(N3CCNCC3)c(F)cc2c1=O,reduced_absorption,mild
+Lithium,Ibuprofen,[Li+],CC(C)Cc1ccc(cc1)C(C)C(=O)O,lithium_toxicity,dangerous
+Sildenafil,Nitrates,CCCC1=NN(C)C(=C1C(=O)NCC2=CC=CC=N2)c1cc(S(=O)(=O)N3CCN(C)CC3)ccc1OCC,O=N[O-],hypotension,dangerous
+Warfarin,Vitamin K,CC(=O)Cc1ccc(OC)c(c1)C(=O)O,CC(=CCC1C(=O)c2ccccc2C1=O)C,reduced_anticoag,moderate
+Metformin,Alcohol,CN(C)C(=N)NC(=N)N,CCO,lactic_acidosis,moderate
