@@ -1,6 +1,7 @@
+rdkit-pypi; python_version < "3.12"
+rdkit; python_version >= "3.12"
 torch==2.12.1
 torch-geometric==2.8.0
-rdkit
 pandas
 numpy
 scikit-learn
