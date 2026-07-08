@@ -1,148 +1,100 @@
-# 💊 Drug Interaction Checker — Graph Neural Network
+# 💊 Drug Interaction Checker
 
-A machine learning system that analyses the **molecular structure** of two drugs
-and predicts how they interact — dangerous, moderate, or mild.
+A machine learning web app that predicts how two drugs interact by analysing their molecular structures using Graph Neural Networks.
 
-🔗 **Live Demo:** [coming soon]
-
----
-
-## What Makes This Different
-
-Most drug interaction tools look up a table of known interactions.
-This system uses a **Graph Neural Network (GNN)** to analyse the actual
-molecular structure of each drug — the same approach used by Pfizer and
-Google DeepMind for drug discovery.
-User types two drug names
-↓
-PubChem API fetches molecular structures (SMILES)
-↓
-RDKit converts SMILES → molecular graph (atoms=nodes, bonds=edges)
-↓
-GNN runs message passing across both molecular graphs
-↓
-Classifier predicts: DANGEROUS / MODERATE / MILD
-↓
-Gemini 2.5 Flash explains the interaction in plain English
+🔗 **Live Demo:** [drug-interaction-gnn.streamlit.app](https://drug-interaction-gnn.streamlit.app)
 
 ---
 
-## Why Graph Neural Networks?
+## Overview
 
-Molecules are naturally graph-shaped data — atoms are nodes, bonds are edges.
-Standard neural networks expect flat arrays and cannot capture this structure.
-GNNs are designed specifically for graph-shaped data, preserving the full
-molecular geometry during learning.
+Most drug interaction tools work by looking up a fixed table of known combinations. This project takes a different approach. It uses a Graph Neural Network to read the actual molecular structure of each drug and reason about how they might interact, the same technique used in pharmaceutical research for drug discovery.
+
+Type in two drug names and the app will predict whether the combination is dangerous, moderate, or mild, show you both molecules spinning in 3D, and explain the interaction in plain English using Gemini 2.5 Flash.
 
 ---
 
-## Architecture
-MoleculeEncoder (shared weights for both drugs)
-→ GCNConv layer 1  (message passing — 1-hop neighbours)
-→ GCNConv layer 2  (message passing — 2-hop neighbours)
-→ GCNConv layer 3  (message passing — 3-hop neighbours)
-→ Global mean pooling → molecular fingerprint [128-dim]
-DrugInteractionGNN
-→ Encode Drug A → fingerprint A [128-dim]
-→ Encode Drug B → fingerprint B [128-dim]
-→ Concatenate   → combined      [256-dim]
-→ Linear(256→128) → ReLU → Dropout
-→ Linear(128→64)  → ReLU → Dropout
-→ Linear(64→4)    → severity prediction
+## How It Works
+
+Drugs are molecules. Molecules are graphs where atoms are nodes and bonds are edges. A standard neural network cannot process graph shaped data without flattening it and losing the structure. Graph Neural Networks are built specifically to work with graphs, preserving all the spatial and chemical relationships between atoms.
+User enters two drug names
+↓
+PubChem API fetches molecular structures
+↓
+RDKit converts each molecule into a graph
+↓
+GNN runs message passing across both graphs
+↓
+Classifier predicts: Dangerous / Moderate / Mild
+↓
+Gemini 2.5 Flash explains the result in plain English
+
+---
+
+## Tech Stack
 
 | Component | Technology |
 |---|---|
 | GNN Framework | PyTorch Geometric |
 | Molecular Processing | RDKit |
-| Molecular Data | PubChem API (free, no key) |
+| Molecular Data | PubChem API |
 | Interaction Labels | Kaggle DDI Dataset (191K pairs) |
 | Explanations | Gemini 2.5 Flash |
-| UI | Streamlit + 3Dmol.js (3D molecules) |
+| UI | Streamlit with 3Dmol.js |
 
 ---
 
-## Training Data
+## Model
 
-- **Source:** Kaggle Drug-Drug Interactions dataset (191,541 pairs)
-- **Processing:** Severity labels extracted from interaction descriptions
-- **Final dataset:** 1,488 balanced pairs (496 per class)
-- **Train/Val split:** 80/20
-- **Validation accuracy:** 64.4% (vs 33% random baseline)
+The GNN encoder runs three rounds of message passing on each molecule, where every atom gathers information from its neighbours and updates its own representation. After three rounds each atom carries a summary of its broader chemical environment. A global pooling step then collapses all atom vectors into a single molecular fingerprint. Both fingerprints are concatenated and passed through a classifier.
+
+**Validation accuracy: 64.4%** across three classes on 298 held out drug pairs, compared to a 33.3% random baseline.
 
 ---
 
 ## Project Structure
 drug-interaction-gnn/
-│
 ├── src/
-│   ├── download_data.py      # synthetic dataset creation
-│   ├── build_dataset.py      # real DDI dataset + PubChem pipeline
-│   ├── mol_graph.py          # SMILES → PyG graph conversion
+│   ├── mol_graph.py          # SMILES to PyG graph conversion
 │   ├── dataset.py            # PyTorch dataset loader
 │   ├── model.py              # GNN architecture
 │   ├── train.py              # training pipeline
+│   ├── build_dataset.py      # data processing and PubChem pipeline
 │   └── app.py                # Streamlit web app
-│
 ├── data/
-│   ├── raw/                  # original downloaded datasets
-│   └── processed/            # training-ready CSVs + SMILES cache
-│
+│   ├── raw/                  # source datasets
+│   └── processed/            # training ready CSVs
 ├── models/
-│   └── best_model.pt         # saved trained model
-│
-├── requirements.txt
-└── README.md
+│   └── best_model.pt         # trained model weights
+└── requirements.txt
 
 ---
 
 ## Run Locally
 
 ```bash
-# 1. Clone the repo
 git clone https://github.com/KaveeshaEkanayake/drug-interaction-gnn
 cd drug-interaction-gnn
 
-# 2. Install dependencies (use conda for RDKit)
 conda install -c conda-forge rdkit -y
 pip install -r requirements.txt
 
-# 3. Add your Gemini API key
 echo GEMINI_API_KEY=your_key_here > .env
 
-# 4. Train the model
 python src/train.py
-
-# 5. Run the app
 streamlit run src/app.py
 ```
 
 ---
 
-## Results
+## Data Sources
 
-| Metric | Score |
-|---|---|
-| Validation Accuracy | 64.4% |
-| Random Baseline | 33.3% |
-| Improvement | +31.1% |
-| Mild F1 | 0.76 |
-| Moderate F1 | 0.65 |
-| Dangerous F1 | 0.49 |
+The interaction dataset used for training is the [Drug-Drug Interactions dataset](https://www.kaggle.com/datasets/mghobashy/drug-drug-interactions) by MGhobashy on Kaggle, which contains 191,541 drug interaction pairs sourced from DrugBank. Molecular structures were fetched at runtime using the [PubChem REST API](https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest).
 
 ---
-
 ## Limitations
 
-- Trained on 1,488 pairs — production systems use 50,000+
-- Severity labels extracted via keyword rules, not manual annotation
-- No "safe" class in current training data
-- For educational purposes only — not for clinical use
+This project is for educational purposes only and should not be used to make real medical decisions. The model was trained on 1,488 drug pairs with labels extracted using keyword rules rather than clinical annotation. A production system would require significantly more data and rigorous validation.
 
 ---
 
-## Author
-
-**Kaveesha Ekanayake**
-Computing Student | ML Engineering
-
-[![GitHub](https://img.shields.io/badge/GitHub-KaveeshaEkanayake-black)](https://github.com/KaveeshaEkanayake)
