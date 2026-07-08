@@ -51,8 +51,9 @@ The GNN encoder runs three rounds of message passing on each molecule, where eve
 **Validation accuracy: 64.4%** across three classes on 298 held out drug pairs, compared to a 33.3% random baseline.
 
 ---
-
 ## Project Structure
+
+```
 drug-interaction-gnn/
 ├── src/
 │   ├── mol_graph.py          # SMILES to PyG graph conversion
@@ -67,7 +68,7 @@ drug-interaction-gnn/
 ├── models/
 │   └── best_model.pt         # trained model weights
 └── requirements.txt
-
+```
 ---
 
 ## Run Locally
